@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const User = require("./routes");
 
 const config = require("./config");
 app.listen(process.env.PORT, () => {
@@ -8,7 +9,6 @@ app.listen(process.env.PORT, () => {
 });
 
 config.DBconfig();
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Testing!");
-});
+app.use("/", User.UserRoutes);
