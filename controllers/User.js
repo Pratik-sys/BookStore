@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   Register: async (req, res) => {
@@ -18,14 +19,30 @@ module.exports = {
   Login: async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
-      comparehash = await bcrypt.compare(user.password, req.body.password);
       if (!user) {
         return res.status(404).json({ msg: "No such user available" });
-      } else if (comparehash) {
-        return res.status(202).json({ msg: "User logged in sucessfully" });
+      }
+      const comparehash = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (comparehash) {
+        const payload = {
+          id: user.id,
+        };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: 315556926,
+        });
+        return res.status(202).json({
+          sucess: true,
+          token: `Bearer ${token}`,
+        });
+      } else {
+        return res
+          .status(406)
+          .json({ msg: "Opps! you entered incorrect password" });
       }
     } catch (error) {
-      console.log(error)
       return res.status(404).json({ msg: "Try login with proper credentials" });
     }
   },

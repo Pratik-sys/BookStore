@@ -3,7 +3,7 @@ const { Book } = require("../models");
 module.exports = {
   bookAdd: async (req, res) => {
     try {
-      const book = await new Book({
+      await new Book({
         bookTitle: req.body.title,
         bookDetails: req.body.details,
         Price: req.body.price,
