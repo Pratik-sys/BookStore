@@ -1,15 +1,24 @@
 const { Book } = require("../models");
-const { imageUpload } = require("../utils/ImageUpload");
+const { imageUpload} = require("../utils/ImageUpload");
 
 module.exports = {
   bookAdd: async (req, res) => {
     try {
+      const image = await imageUpload(
+        req.body.image,
+        req.body.title,
+        req.body.genere
+      );
       await new Book({
         bookTitle: req.body.title,
         bookDetails: req.body.details,
         Price: req.body.price,
         rating: req.body.rating,
         genere: req.body.genere,
+        img: {
+          awsId: image.ETag,
+          url: image.Location,
+        },
       }).save();
       return res.status(201).json({ msg: "Book added !" });
     } catch (error) {
@@ -73,12 +82,8 @@ module.exports = {
       return res.status(500).json({ msg: "Error while fetching books" });
     }
   },
-  uploadBook: (req, res) => {
-    try {
-      imageUpload(req.body.image, req.body.name, req.body.genere);
-      return res.status(200).json({ msg: "uploaded" });
-    } catch (error) {
-      return res.status(404).json({ msg: "error" });
-    }
-  },
+  // deleteall: async (req, res) => {
+  //   await Book.deleteMany({});
+  //   return res.json({ msg: "flushed " });
+  // },
 };
