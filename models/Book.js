@@ -26,7 +26,7 @@ const BookSchema = mongoose.Schema({
     required: true,
   },
   img: {
-    awsId: {
+    awsKey: {
       type: String,
     },
     url: {

@@ -1,5 +1,5 @@
 const { Book } = require("../models");
-const { imageUpload} = require("../utils/ImageUpload");
+const { imageUpload, deleteImage } = require("../utils/Image");
 
 module.exports = {
   bookAdd: async (req, res) => {
@@ -16,7 +16,7 @@ module.exports = {
         rating: req.body.rating,
         genere: req.body.genere,
         img: {
-          awsId: image.ETag,
+          awsKey: image.Key,
           url: image.Location,
         },
       }).save();
@@ -27,7 +27,7 @@ module.exports = {
   },
   bookUpdate: async (req, res) => {
     try {
-      const book = await Book.findByIdAndUpdate(
+      await Book.findByIdAndUpdate(
         { _id: req.params.id },
         {
           $set: {
@@ -50,6 +50,7 @@ module.exports = {
       if (!book) {
         return res.status(404).json({ msg: "Nothing to delete here" });
       }
+      await deleteImage(book.img.awsKey);
       await book.remove({ _id: req.params.id });
       return res.status(200).json({ msg: "Deleted sucessfully !" });
     } catch (error) {

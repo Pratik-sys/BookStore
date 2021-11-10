@@ -33,4 +33,18 @@ module.exports = {
       throw error;
     }
   },
+  deleteImage: (data) => {
+    try {
+      console.log(data);
+      return new Promise((resolve, reject) => {
+        var objectParams = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: data,
+        };
+        resolve(s3Bucket.deleteObject(objectParams).promise());
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
 };
