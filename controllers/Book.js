@@ -1,4 +1,5 @@
 const { Book } = require("../models");
+const { imageUpload } = require("../utils/ImageUpload");
 
 module.exports = {
   bookAdd: async (req, res) => {
@@ -70,6 +71,14 @@ module.exports = {
       return res.status(200).json(book);
     } catch (error) {
       return res.status(500).json({ msg: "Error while fetching books" });
+    }
+  },
+  uploadBook: (req, res) => {
+    try {
+      imageUpload(req.body.image, req.body.name, req.body.genere);
+      return res.status(200).json({ msg: "uploaded" });
+    } catch (error) {
+      return res.status(404).json({ msg: "error" });
     }
   },
 };

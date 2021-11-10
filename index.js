@@ -9,7 +9,7 @@ const { Passport } = require("./config/passport");
 // load configs and init Database
 require("dotenv").config();
 config.DBconfig();
-
+config.awsConfig();
 // allows to fetch data in json format
 app.use(express.json());
 

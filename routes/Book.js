@@ -8,5 +8,6 @@ Book.put("/:id/updateBook", BookController.bookUpdate);
 Book.delete("/:id/deleteBook", BookController.bookDelete);
 Book.get("/allBook", BookController.bookAll);
 Book.get("/:id/book", BookController.specificBook);
+Book.put("/upload", BookController.uploadBook);
 
 module.exports = Book;
