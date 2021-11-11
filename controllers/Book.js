@@ -27,25 +27,43 @@ module.exports = {
       }).save();
       return res.status(201).json({ msg: "Book added !" });
     } catch (error) {
+      await deleteImage(imageDetails.awsKey); // delete the image if there is an error while adding book
       return res.status(404).json({ msg: "Error while addding" });
     }
   },
   bookUpdate: async (req, res) => {
+    let imageDetails = {};
     try {
+      const book = Book.findOne({ _id: req.params.id });
+      if (!book) {
+        return res.status(404).json({ msg: "Book not found" });
+      }
+      if (req.body.image) {
+        imageDetails = await imageUpload(
+          req.body.image,
+          req.body.title || book.bookTitle,
+          req.body.genere || book.genere
+        );
+        await deleteImage(book.img.awsKey);
+      } else {
+        imageDetails = book.img;
+      }
       await Book.findByIdAndUpdate(
         { _id: req.params.id },
         {
           $set: {
-            bookTitle: req.body.title,
-            bookDetails: req.body.details,
-            Price: req.body.price,
-            rating: req.body.rating,
-            genere: req.body.genere,
+            bookTitle: req.body.title || book.bookTitle,
+            bookDetails: req.body.details || book.bookDetails,
+            Price: req.body.price || book.price,
+            rating: req.body.rating || book.rating,
+            genere: req.body.genere || book.genere,
+            img: imageDetails,
           },
         }
       );
       return res.status(202).json({ msg: "Book updated !" });
     } catch (error) {
+      await deleteImage(book.img.awsKey); // delete the image if there is an error while updating book
       return res.status(404).json({ msg: "Error while updating book" });
     }
   },
