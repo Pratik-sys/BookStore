@@ -23,7 +23,10 @@ module.exports = {
         Price: req.body.price,
         rating: req.body.rating,
         genere: req.body.genere,
-        img: imageDetails,
+        img: {
+          awsKey: imageDetails.Key || imageDetails.awsKey,
+          url: imageDetails.Location || imageDetails.url,
+        },
       }).save();
       return res.status(201).json({ msg: "Book added !" });
     } catch (error) {
@@ -34,7 +37,7 @@ module.exports = {
   bookUpdate: async (req, res) => {
     let imageDetails = {};
     try {
-      const book = Book.findOne({ _id: req.params.id });
+      const book = await Book.findById(req.params.id);
       if (!book) {
         return res.status(404).json({ msg: "Book not found" });
       }
@@ -44,7 +47,9 @@ module.exports = {
           req.body.title || book.bookTitle,
           req.body.genere || book.genere
         );
-        await deleteImage(book.img.awsKey);
+        if (book.img.awsKey != process.env.DEFAULT_IMAGE_KEY) {
+          await deleteImage(book.img.awsKey);
+        }
       } else {
         imageDetails = book.img;
       }
@@ -57,7 +62,10 @@ module.exports = {
             Price: req.body.price || book.price,
             rating: req.body.rating || book.rating,
             genere: req.body.genere || book.genere,
-            img: imageDetails,
+            img: {
+              awsKey: imageDetails.Key || imageDetails.awsKey,
+              url: imageDetails.Location || imageDetails.url,
+            },
           },
         }
       );
