@@ -3,22 +3,27 @@ const { imageUpload, deleteImage } = require("../utils/Image");
 
 module.exports = {
   bookAdd: async (req, res) => {
+    let imageDetails = {};
     try {
-      const image = await imageUpload(
-        req.body.image,
-        req.body.title,
-        req.body.genere
-      );
+      if (req.body.image) {
+        imageDetails = await imageUpload(
+          req.body.image,
+          req.body.title,
+          req.body.genere
+        );
+      } else {
+        imageDetails = {
+          awsKey: process.env.DEFAULT_IMAGE_KEY,
+          url: process.env.DEFAULT_IMAGE_URL,
+        };
+      }
       await new Book({
         bookTitle: req.body.title,
         bookDetails: req.body.details,
         Price: req.body.price,
         rating: req.body.rating,
         genere: req.body.genere,
-        img: {
-          awsKey: image.Key,
-          url: image.Location,
-        },
+        img: imageDetails,
       }).save();
       return res.status(201).json({ msg: "Book added !" });
     } catch (error) {
