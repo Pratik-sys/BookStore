@@ -8,7 +8,6 @@ const Client = require("./routes/Client");
 const Public = require("./routes/Public");
 const config = require("./config");
 const { Passport } = require("./config/passport");
-const { validateBook, validateUser } = require("./middlewares");
 
 // load configs and init the functions
 config.DBconfig();
@@ -20,14 +19,10 @@ app.use(passport.initialize());
 app.use(express.json());
 
 // Regestring the routes in index file
-app.use("/", validateUser[Auth.AuthRoutes]);
-app.use("/public", [Public.Bookroutes]);
-app.use(
-  "/client",
-  validateBook,
-  passport.authenticate("jwt", { session: false }),
-  [Client.UserRoutes]
-);
+app.use("/", [Auth.AuthRoutes, Public.Bookroutes]);
+app.use("/client", passport.authenticate("jwt", { session: false }), [
+  Client.UserRoutes,
+]);
 
 // stream server on 3000 port
 app.listen(process.env.PORT, () => {

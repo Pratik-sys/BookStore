@@ -1,7 +1,11 @@
 const { validateBook } = require("./BookValidation");
-const { validateUser } = require("./UserValidations");
+const {
+  validateRegisterInput,
+  validateLoginInput,
+} = require("./UserValidations");
 
 module.exports = {
   validateBook,
-  validateUser,
+  validateRegisterInput,
+  validateLoginInput,
 };

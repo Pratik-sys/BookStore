@@ -1,10 +1,8 @@
 const Validator = require("validator");
 const isEmpty = require("is-empty");
-const { Book } = require("../models");
-const { Validation } = require("../utils");
 
 module.exports = {
-  validateProduct: (req, res, next) => {
+  validateBook: (req, res, next) => {
     let errors = {};
     //Book title  check
     if (req.body.title === "") {
