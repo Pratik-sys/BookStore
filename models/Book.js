@@ -9,6 +9,10 @@ const BookSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  Author: {
+    type: String,
+    required: true,
+  },
   Price: {
     type: String,
     default: "0",

@@ -23,6 +23,7 @@ module.exports = {
         Price: req.body.price,
         rating: req.body.rating,
         genere: req.body.genere,
+        Author: req.body.author,
         img: {
           awsKey: imageDetails.Key || imageDetails.awsKey,
           url: imageDetails.Location || imageDetails.url,
@@ -62,6 +63,7 @@ module.exports = {
             Price: req.body.price || book.price,
             rating: req.body.rating || book.rating,
             genere: req.body.genere || book.genere,
+            Author: req.body.author || book.Author,
             img: {
               awsKey: imageDetails.Key || imageDetails.awsKey,
               url: imageDetails.Location || imageDetails.url,
