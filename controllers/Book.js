@@ -1,12 +1,12 @@
 const { Book } = require("../models");
-const { imageUpload, deleteImage } = require("../utils/Image");
+const { AwsS3Bucket } = require("../utils");
 
 module.exports = {
   bookAdd: async (req, res) => {
     let imageDetails = {};
     try {
       if (req.body.image) {
-        imageDetails = await imageUpload(
+        imageDetails = await AwsS3Bucket.imageUpload(
           req.body.image,
           req.body.title,
           req.body.genere
@@ -30,7 +30,7 @@ module.exports = {
       }).save();
       return res.status(201).json({ msg: "Book added !" });
     } catch (error) {
-      await deleteImage(imageDetails.awsKey); // delete the image if there is an error while adding book
+      await AwsS3Bucket.deleteImage(imageDetails.awsKey); // delete the image if there is an error while adding book
       return res.status(404).json({ msg: "Error while addding" });
     }
   },
@@ -42,13 +42,13 @@ module.exports = {
         return res.status(404).json({ msg: "Book not found" });
       }
       if (req.body.image) {
-        imageDetails = await imageUpload(
+        imageDetails = await AwsS3Bucket.imageUpload(
           req.body.image,
           req.body.title || book.bookTitle,
           req.body.genere || book.genere
         );
         if (book.img.awsKey != process.env.DEFAULT_IMAGE_KEY) {
-          await deleteImage(book.img.awsKey);
+          await AwsS3Bucket.deleteImage(book.img.awsKey);
         }
       } else {
         imageDetails = book.img;
@@ -71,7 +71,7 @@ module.exports = {
       );
       return res.status(202).json({ msg: "Book updated !" });
     } catch (error) {
-      await deleteImage(book.img.awsKey); // delete the image if there is an error while updating book
+      await AwsS3Bucket.deleteImage(book.img.awsKey); // delete the image if there is an error while updating book
       return res.status(404).json({ msg: "Error while updating book" });
     }
   },
@@ -81,7 +81,7 @@ module.exports = {
       if (!book) {
         return res.status(404).json({ msg: "Nothing to delete here" });
       }
-      await deleteImage(book.img.awsKey);
+      await AwsS3Bucket.deleteImage(book.img.awsKey);
       await book.remove({ _id: req.params.id });
       return res.status(200).json({ msg: "Deleted sucessfully !" });
     } catch (error) {

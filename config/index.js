@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const AWS = require("aws-sdk");
-const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION } = process.env;
 
 module.exports = {
   DBconfig: () => {
@@ -11,9 +10,9 @@ module.exports = {
   },
   awsConfig: () => {
     AWS.config.update({
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      secreteAccessKey: AWS_SECRET_ACCESS_KEY,
-      region: REGION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secreteAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.REGION,
     });
   },
 };
