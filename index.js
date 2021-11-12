@@ -3,8 +3,9 @@ const passport = require("passport");
 const app = express();
 require("dotenv").config();
 
-const User = require("./routes");
-const Book = require("./routes");
+const Auth = require("./routes/Auth");
+const Client = require("./routes/Client");
+const Public = require("./routes/Public");
 const config = require("./config");
 const { Passport } = require("./config/passport");
 
@@ -18,11 +19,11 @@ app.use(passport.initialize());
 app.use(express.json());
 
 // Regestring the routes in index file
-app.use("/", User.UserRoutes);
+app.use("/",[Auth.AuthRoutes, Public.Bookroutes]);
 app.use(
-  "/book",
+  "/client",
   passport.authenticate("jwt", { session: false }),
-  Book.BookRoutes
+  Client.UserRoutes
 );
 
 // stream server on 3000 port
