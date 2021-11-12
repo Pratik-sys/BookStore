@@ -19,7 +19,6 @@ const BookSchema = mongoose.Schema({
     min: 0,
     max: 5,
     default: 0,
-    required: true,
   },
   genere: {
     type: String,
