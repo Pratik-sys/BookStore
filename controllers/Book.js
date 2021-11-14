@@ -116,8 +116,4 @@ module.exports = {
       return res.status(500).json({ msg: "Error while fetching books" });
     }
   },
-  // deleteall: async (req, res) => {
-  //   await Book.deleteMany({});
-  //   return res.json({ msg: "flushed " });
-  // },
 };
